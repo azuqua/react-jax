@@ -1,5 +1,5 @@
 {
-  "name": "<name>",
+  "name": "react-superagent-decorator",
   "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
@@ -21,9 +21,7 @@
   "bugs": {
     "url": "http://github.com/nickclaw/<name>/issues"
   },
-  "keywords": [
-
-  ],
+  "keywords": [],
   "author": {
     "name": "Nicholas Clawson",
     "email": "nickclaw@gmail.com",
@@ -31,8 +29,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "debug": "^2.2.0",
-    "lodash": "^4.3.0"
+    "hoist-non-react-statics": "^1.0.5",
+    "lodash": "^4.3.0",
+    "react-display-name": "^0.1.1",
+    "superagent": "^1.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",

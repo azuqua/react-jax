@@ -5,9 +5,13 @@
 
 ```js
 import React from 'react';
-import { superagent } from 'react-superagent-decorator';
+import superagent from 'react-superagent-decorator';
 
-@superagent()
+@superagent({ // same as defaults
+    methods: ['get', 'post', 'del', 'put'],
+    pendingProperty: 'pending',
+    abortProperty: 'abort'
+})
 export default class MyComponent extends React.Component {
 ``
     sendRequest = () => {
@@ -17,9 +21,9 @@ export default class MyComponent extends React.Component {
     }
 
     render() {
-        return this.props.pendingRequests ?
+        return this.props.pending ?
             <button onClick={this.sendRequest}>Click Me</button> :
-            <button onClick={this.props.abortRequest}>Cancel</button>;
+            <button onClick={this.props.abort}>Cancel</button>;
     }
 }
 ```
