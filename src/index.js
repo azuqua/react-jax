@@ -6,8 +6,8 @@ import superagent from 'superagent';
 
 export default ({
     methods = ['get', 'post', 'del', 'put'],
-    abortProperty = 'abort',
-    pendingProperty = 'pending',
+    abortKey = 'abort',
+    pendingKey = 'pending',
 } = {}) => (OriginalComponent) => {
     // return a higher-order-component
     class WrappedComponent extends Component {
@@ -83,8 +83,8 @@ export default ({
             const props = {
                 ...this.props,
                 ...this.methods,
-                [abortProperty]: this.abort,
-                [pendingProperty]: this.state.pending,
+                [abortKey]: this.abort,
+                [pendingKey]: this.state.pending,
             };
 
             return createElement(OriginalComponent, props);

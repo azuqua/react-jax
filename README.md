@@ -9,8 +9,8 @@ import superagent from 'react-superagent-decorator';
 
 @superagent({ // same as defaults
     methods: ['get', 'post', 'del', 'put'],
-    pendingProperty: 'pending',
-    abortProperty: 'abort'
+    pendingKey: 'pending',
+    abortKey: 'abort'
 })
 export default class MyComponent extends React.Component {
 ``
@@ -29,3 +29,42 @@ export default class MyComponent extends React.Component {
 ```
 
 ### API
+
+##### As a decorator
+```js
+@superagent(options)
+export default class Test extends React.Component {
+    /* your code */
+}
+```
+
+##### As a function
+```js
+class Test extends React.Component {
+    /* your code */
+}
+
+export default superagent(options)(Test);
+```
+
+#### Options
+
+##### `methods` defaults to `['get', 'post', 'del', 'put']`
+Array of superagent methods to expose as properties.
+
+##### `pendingKey` defaults to `pending`
+Property name to expose the pending status as.
+
+##### `abortKey` defaults to `abort`
+Property name to expose the abort function as.
+
+#### Properties
+
+##### `props[abortKey]() -> undefined`
+Aborts all pending requests sent by the component.
+
+##### `props[pending] -> boolean`
+Returns true if any request sent by the component are pending.
+
+##### `props[method](...args) -> req`
+Exact same function signatures that superagent exposes. [See relevant superagent code.](https://github.com/visionmedia/superagent/blob/01182870a4b5f80dec028ae8d0ea8b10e5b38dda/lib/client.js#L823-L929)
