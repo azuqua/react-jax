@@ -2,12 +2,22 @@ import { createElement, Component } from 'react';
 import hoist from 'hoist-non-react-statics';
 import getDisplayName from 'react-display-name';
 import transform from 'lodash/transform';
-import superagent from 'superagent';
+import request from 'superagent';
 
-export default ({
-    methods = ['get', 'post', 'del', 'put'],
-    abortKey = 'abort',
-    pendingKey = 'pending',
+// overrideable defaults for the package
+export const superagentDefaults = {
+    client: request,
+    methods: ['get', 'post', 'del', 'put'],
+    pendingKey: 'pending',
+    abortKey: 'abort',
+};
+
+// the decorator
+export const superagent = ({
+    client = superagentDefaults.client,
+    methods = superagentDefaults.methods,
+    abortKey = superagentDefaults.abortKey,
+    pendingKey = superagentDefaults.pendingKey,
 } = {}) => (OriginalComponent) => {
     // return a higher-order-component
     class WrappedComponent extends Component {
@@ -19,7 +29,7 @@ export default ({
          * @type {Object.<String|Function>}
          */
         methods = transform(methods, (obj, name) => { // eslint-disable-line react/sort-comp
-            obj[name] = (...args) => this.trackRequest(superagent[name](...args));
+            obj[name] = (...args) => this.trackRequest(client[name](...args));
         }, {});
 
         /**
@@ -77,7 +87,6 @@ export default ({
         abort = () => {
             this.requests.forEach(req => req.abort());
         };
-
 
         render() {
             const props = {

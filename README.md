@@ -5,7 +5,7 @@
 
 ```js
 import React from 'react';
-import superagent from 'react-superagent-decorator';
+import { superagent, superagentDefaults } from 'react-superagent-decorator';
 
 @superagent({ // same as defaults
     methods: ['get', 'post', 'del', 'put'],
@@ -48,6 +48,11 @@ export default superagent(options)(Test);
 ```
 
 #### Options
+
+These options can be passed to the `superagent()` function. Or be set on the
+exported `superagentDefaults` object.
+
+##### `client` defaults to `require('superagent')`
 
 ##### `methods` defaults to `['get', 'post', 'del', 'put']`
 Array of superagent methods to expose as properties.
