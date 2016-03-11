@@ -13,18 +13,19 @@ A tiny decorator to manage AJAX requests in React components.
 import React from 'react';
 import { jax, jaxDefaults } from 'react-jax';
 import superagent from 'superagent';
-// import request from 'request';
 
+/* set global defaults */
 jaxDefaults.client = superagent;
-// jaxDefaults.client = request;
+jaxDefaults.pendingKey = 'loading';
 
+/* overwrite options for a component */
 @jax({ // same as defaults
     methods: ['get', 'post', 'del', 'put'],
     pendingKey: 'pending',
     abortKey: 'abort'
 })
 export default class MyComponent extends React.Component {
-``
+
     sendRequest = () => {
         this.props.get('https://example.com').end((err, res) => {
           // your code
