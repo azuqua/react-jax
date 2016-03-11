@@ -1,7 +1,7 @@
 {
-  "name": "react-superagent-decorator",
+  "name": "react-jax",
   "version": "0.1.0",
-  "description": "",
+  "description": "A tiny decorator to manage AJAX requests in React components.",
   "main": "lib/index.js",
   "scripts": {
     "build": "rm -rf lib && babel src --out-dir lib",
@@ -31,8 +31,7 @@
   "dependencies": {
     "hoist-non-react-statics": "^1.0.5",
     "lodash": "^4.3.0",
-    "react-display-name": "^0.1.1",
-    "superagent": "^1.8.0"
+    "react-display-name": "^0.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
@@ -51,6 +50,7 @@
     "react": "^0.14.7",
     "react-addons-test-utils": "^0.14.7",
     "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "superagent": "^1.8.0"
   }
 }

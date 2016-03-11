@@ -2,27 +2,29 @@ import { createElement, Component } from 'react';
 import hoist from 'hoist-non-react-statics';
 import getDisplayName from 'react-display-name';
 import transform from 'lodash/transform';
-import request from 'superagent';
 
 // overrideable defaults for the package
-export const superagentDefaults = {
-    client: request,
+export const jaxDefaults = {
+    client: null,
     methods: ['get', 'post', 'del', 'put'],
     pendingKey: 'pending',
     abortKey: 'abort',
 };
 
 // the decorator
-export const superagent = ({
-    client = superagentDefaults.client,
-    methods = superagentDefaults.methods,
-    abortKey = superagentDefaults.abortKey,
-    pendingKey = superagentDefaults.pendingKey,
+export const jax = ({
+    client = jaxDefaults.client,
+    methods = jaxDefaults.methods,
+    abortKey = jaxDefaults.abortKey,
+    pendingKey = jaxDefaults.pendingKey,
 } = {}) => (OriginalComponent) => {
+    if (!client) throw new Error('No client specified.');
+    if (!OriginalComponent) throw new Error('No component to wrap.');
+
     // return a higher-order-component
     class WrappedComponent extends Component {
 
-        static displayName = `Superagent(${getDisplayName(OriginalComponent)})`;
+        static displayName = `Jax(${getDisplayName(OriginalComponent)})`;
 
         /**
          * Requests to be passed to the OriginalComponent as props

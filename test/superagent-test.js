@@ -1,28 +1,31 @@
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
-import { superagent, superagentDefaults } from '../src';
+import { jax, jaxDefaults } from '../src';
+import superagent from 'superagent';
 
-describe('superagent decorator', function() {
+jaxDefaults.client = superagent;
+
+describe('jax decorator', function() {
 
   it('should be a function', function() {
-    expect(superagent).to.be.instanceOf(Function);
+    expect(jax).to.be.instanceOf(Function);
   });
 
   it('should optionally take an options object', function() {
-    expect(() => superagent()).to.not.throw();
-    expect(() => superagent({})).to.not.throw();
+    expect(() => jax()).to.not.throw();
+    expect(() => jax({})).to.not.throw();
   });
 
-  it('should return a superagent component factory', function() {
-    expect(superagent()).to.be.instanceOf(Function);
+  it('should return a jax component factory', function() {
+    expect(jax()).to.be.instanceOf(Function);
   });
 });
 
-describe('superagent component factory', function() {
+describe('jax component factory', function() {
 
   let factory = null;
   before(function() {
-    factory = superagent();
+    factory = jax();
   });
 
   it('should be a function', function() {
@@ -39,11 +42,11 @@ describe('superagent component factory', function() {
     class Test extends React.Component {};
     const res = factory(Test);
 
-    expect(res.displayName).to.equal('Superagent(Test)');
+    expect(res.displayName).to.equal('Jax(Test)');
   });
 });
 
-describe('superagent Component', function() {
+describe('jax Component', function() {
 
     class _Test extends React.Component {
         render() {
@@ -58,7 +61,7 @@ describe('superagent Component', function() {
     });
 
     it('should use the default options if none are provided', function() {
-      const Test = superagent()(_Test);
+      const Test = jax()(_Test);
       TestUtils.renderIntoDocument(<Test />);
 
       expect(props.get).to.be.instanceOf(Function);
@@ -70,7 +73,7 @@ describe('superagent Component', function() {
     });
 
     it('should honor the methods property', function() {
-      const Test = superagent({ methods: ['get'] })(_Test);
+      const Test = jax({ methods: ['get'] })(_Test);
       TestUtils.renderIntoDocument(<Test />);
 
       expect(props.get).to.be.instanceOf(Function);
@@ -80,7 +83,7 @@ describe('superagent Component', function() {
     });
 
     it('should honor the pendingKey option', function() {
-      const Test = superagent({ pendingKey: 'foo' })(_Test);
+      const Test = jax({ pendingKey: 'foo' })(_Test);
       TestUtils.renderIntoDocument(<Test />);
 
       expect(props.pending).to.be.undefined;
@@ -88,7 +91,7 @@ describe('superagent Component', function() {
     });
 
     it('should honor the abortKey property', function() {
-      const Test = superagent({ abortKey: 'foo' })(_Test);
+      const Test = jax({ abortKey: 'foo' })(_Test);
       TestUtils.renderIntoDocument(<Test />);
 
       expect(props.abort).to.be.undefined;
