@@ -68,8 +68,7 @@ export const jax = ({
                 this.setState({ pending: true });
             }
 
-            // when finished, remove the request
-            req.on('end', () => {
+            const forget = () => {
                 const index = this.requests.indexOf(req);
                 if (index >= 0) {
                     this.requests.splice(index, 1);
@@ -78,7 +77,11 @@ export const jax = ({
                 if (this.requests.length === 0) {
                     this.setState({ pending: false });
                 }
-            });
+            };
+
+            // when finished, remove the request
+            req.on('end', forget);
+            req.on('abort', forget);
 
             return req;
         }
