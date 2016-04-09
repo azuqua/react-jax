@@ -9,6 +9,7 @@ export const jaxDefaults = {
     methods: ['get', 'post', 'del', 'put'],
     pendingKey: 'pending',
     abortKey: 'abort',
+    endEvents: ['end', 'abort'],
 };
 
 // the decorator
@@ -17,6 +18,7 @@ export const jax = ({
     methods = jaxDefaults.methods,
     abortKey = jaxDefaults.abortKey,
     pendingKey = jaxDefaults.pendingKey,
+    endEvents = jaxDefaults.endEvents,
 } = {}) => (OriginalComponent) => {
     if (!client) throw new Error('No http client specified.');
     if (!OriginalComponent) throw new Error('No component to wrap.');
@@ -80,8 +82,7 @@ export const jax = ({
             };
 
             // when finished, remove the request
-            req.on('end', forget);
-            req.on('abort', forget);
+            endEvents.forEach(event => req.on(event, forget));
 
             return req;
         }

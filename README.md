@@ -75,6 +75,10 @@ Property name to expose the pending status as.
 ##### `abortKey` defaults to `abort`
 Property name to expose the abort function as.
 
+#### `endEvents` defaults to `['end', 'abort']`
+Events emitted by the clients request object than indicate it should be
+cleaned up.
+
 #### Properties
 
 ##### `props[abortKey]() -> undefined`
