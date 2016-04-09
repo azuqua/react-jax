@@ -4,6 +4,7 @@ import { jax, jaxDefaults } from '../src';
 import superagent from 'superagent';
 import secretagent from './fixtures/secretagent';
 import _ from 'lodash';
+import each from 'lodash/each';
 
 jaxDefaults.client = superagent;
 
@@ -59,6 +60,15 @@ describe('jax Component', function() {
     let props = null;
     beforeEach(function() {
         props = null;
+        each(secretagent, (val, key) => {
+            if (typeof val === "function") sinon.spy(secretagent, key);
+        });
+    });
+
+    afterEach(function() {
+        each(secretagent, (val, key) => {
+            if (typeof val === "function") secretagent[key].restore();
+        });
     });
 
     it('should use the default options if none are provided', function() {
@@ -101,15 +111,14 @@ describe('jax Component', function() {
 
     it('should honor the "client" property', function() {
         const Test = jax({ client: secretagent })(_Test);
-        const spy = sinon.spy(secretagent, 'get');
         TestUtils.renderIntoDocument(<Test />);
 
         expect(props.get).to.be.instanceOf(Function);
         expect(props.get()).to.equal(secretagent);
-        expect(spy).to.have.been.called;
+        expect(secretagent.get).to.have.been.called;
     });
 
-    describe('honoring the "jaxDefaults"', function() {
+    describe('honors "jaxDefaults"', function() {
 
         let originalDefaults = null;
         beforeEach(function() {
@@ -148,34 +157,82 @@ describe('jax Component', function() {
             _.extend(jaxDefaults, originalDefaults);
         });
     });
-});
 
-describe('request tracking', function() {
 
-    let factory = null;
-    let props = null;
-    before(function() {
-        factory = jax({ client: secretagent });
-        props = null;
-    });
+    describe('tracks requests', function() {
 
-    it('should store pending requests', function() {
+        const factory = jax({ client: secretagent });;
 
-    });
+        it('should start tracking requests when they are made', function() {
+            const Test = factory(_Test);
+            const el = TestUtils.renderIntoDocument(<Test />);
 
-    it('should stop tracking a request when it is aborted or ended', function() {
+            expect(props.pending).to.equal(false);
+            expect(el.requests).to.be.empty;
 
-    });
+            props.get('/test');
 
-    it('should abort all pending requests when unmounted', function() {
+            expect(props.pending).to.equal(true);
+            expect(el.requests.length).to.equal(1);
+        });
 
-    });
+        it('should stop tracking a request when it is ended', function() {
+            const Test = factory(_Test);
+            const el = TestUtils.renderIntoDocument(<Test />);
 
-    it('should abort requests when the "abort" function is called', function() {
+            const req = props.get('/test');
+            expect(props.pending).to.equal(true);
+            expect(el.requests.length).to.equal(1);
 
-    });
+            req.end();
 
-    it('should set the "pending" property to true when any request is pending', function() {
+            expect(props.pending).to.equal(false);
+            expect(el.requests.length).to.equal(0);
+        });
 
+
+        it('should stop tracking a request when it is aborted', function() {
+            const Test = factory(_Test);
+            const el = TestUtils.renderIntoDocument(<Test />);
+
+            const req = props.get('/test');
+            expect(props.pending).to.equal(true);
+            expect(el.requests.length).to.equal(1);
+
+            req.abort();
+
+            expect(props.pending).to.equal(false);
+            expect(el.requests.length).to.equal(0);
+        });
+
+        it('should abort all pending requests when unmounted', function() {
+            const Test = factory(_Test);
+            const el = TestUtils.renderIntoDocument(<Test />);
+
+            props.get('/test');
+            props.post('/test');
+            expect(props.pending).to.equal(true);
+            expect(el.requests.length).to.equal(2);
+
+            el.componentWillUnmount();
+            expect(el.requests.length).to.equal(0);
+            expect(secretagent.abort).to.have.been.called;
+        });
+
+        it('should abort requests when the "abort" function is called', function() {
+            const Test = factory(_Test);
+            const el = TestUtils.renderIntoDocument(<Test />);
+
+            props.get('/test');
+            props.post('/test');
+            expect(props.pending).to.equal(true);
+            expect(el.requests.length).to.equal(2);
+
+            props.abort();
+
+            expect(props.pending).to.equal(false);
+            expect(el.requests.length).to.equal(0);
+            expect(secretagent.abort).to.have.been.called;
+        });
     });
 });

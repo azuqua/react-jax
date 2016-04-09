@@ -15,10 +15,10 @@ import { jax, jaxDefaults } from 'react-jax';
 import superagent from 'superagent';
 
 /* set global defaults */
-jaxDefaults.client = superagent;
+jaxDefaults.client = superagent; // IMPORTANT
 jaxDefaults.pendingKey = 'loading';
 
-/* overwrite options for a component */
+/* overwrite global options for a specific component */
 @jax({ // same as defaults
     methods: ['get', 'post', 'del', 'put'],
     pendingKey: 'pending',

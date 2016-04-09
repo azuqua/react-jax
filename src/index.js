@@ -18,7 +18,7 @@ export const jax = ({
     abortKey = jaxDefaults.abortKey,
     pendingKey = jaxDefaults.pendingKey,
 } = {}) => (OriginalComponent) => {
-    if (!client) throw new Error('No client specified.');
+    if (!client) throw new Error('No http client specified.');
     if (!OriginalComponent) throw new Error('No component to wrap.');
 
     // return a higher-order-component
