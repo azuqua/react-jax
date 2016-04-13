@@ -1,6 +1,6 @@
 # react-jax [![Build Status](https://travis-ci.org/azuqua/react-jax.svg?branch=master)](https://travis-ci.org/azuqua/react-jax)
 
-A tiny decorator to manage AJAX requests in React components.
+A tiny higher order component to manage AJAX requests in React components.
 
  - Automatically aborts requests on `componentWillUnmount`.
  - Supports many AJAX clients.
@@ -84,8 +84,9 @@ cleaned up.
 ##### `props[abortKey]() -> undefined`
 Aborts all pending requests sent by the component.
 
-##### `props[pending] -> boolean`
+##### `props[pendingKey] -> boolean`
 Returns true if any request sent by the component are pending.
 
 ##### `props[method](...args) -> req`
-Exact same function signatures that jax exposes. [See relevant jax code.](https://github.com/visionmedia/jax/blob/01182870a4b5f80dec028ae8d0ea8b10e5b38dda/lib/client.js#L823-L929)
+Exact same function signature the `client` exposes.
+For example, superagent will expose [functions like these.](https://github.com/visionmedia/jax/blob/01182870a4b5f80dec028ae8d0ea8b10e5b38dda/lib/client.js#L823-L929)
