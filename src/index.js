@@ -20,7 +20,6 @@ export const jax = ({
     pendingKey = jaxDefaults.pendingKey,
     endEvents = jaxDefaults.endEvents,
 } = {}) => (OriginalComponent) => {
-    if (!client) throw new Error('No http client specified.');
     if (!OriginalComponent) throw new Error('No component to wrap.');
 
     // return a higher-order-component
