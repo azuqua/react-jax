@@ -190,6 +190,19 @@ describe('jax Component', function() {
             expect(el.requests.length).to.equal(0);
         });
 
+        it('should stop tracking a request when it errors', function() {
+            const Test = factory(_Test);
+            const el = TestUtils.renderIntoDocument(<Test />);
+
+            const req = props.get('/test');
+            expect(props.pending).to.equal(true);
+            expect(el.requests.length).to.equal(1);
+
+            req.emit('error');
+
+            expect(props.pending).to.equal(false);
+            expect(el.requests.length).to.equal(0);
+        });
 
         it('should stop tracking a request when it is aborted', function() {
             const Test = factory(_Test);

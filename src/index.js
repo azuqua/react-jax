@@ -9,7 +9,7 @@ export const jaxDefaults = {
     methods: ['get', 'post', 'del', 'put'],
     pendingKey: 'pending',
     abortKey: 'abort',
-    endEvents: ['end', 'abort'],
+    endEvents: ['end', 'abort', 'error'],
 };
 
 // the decorator
