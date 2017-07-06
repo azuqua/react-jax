@@ -1,12 +1,10 @@
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
-import { jax, jaxDefaults } from '../src';
+import jax from '../src';
 import superagent from 'superagent';
 import secretagent from './fixtures/secretagent';
 import _ from 'lodash';
 import each from 'lodash/each';
-
-jaxDefaults.client = superagent;
 
 describe('jax decorator', function() {
 
@@ -117,47 +115,6 @@ describe('jax Component', function() {
         expect(props.get()).to.equal(secretagent);
         expect(secretagent.get).to.have.been.called;
     });
-
-    describe('honors "jaxDefaults"', function() {
-
-        let originalDefaults = null;
-        beforeEach(function() {
-            originalDefaults = _.extend({}, jaxDefaults);
-            jaxDefaults.abortKey = 'foo';
-            jaxDefaults.pendingKey = 'bar';
-            jaxDefaults.client = secretagent;
-            jaxDefaults.methods = ['get'];
-        });
-
-        it('should honor the defaults set in "jaxDefaults"', function() {
-            const Test = jax()(_Test);
-            TestUtils.renderIntoDocument(<Test />);
-
-            expect(props.get).to.be.instanceOf(Function);
-            expect(props.post).to.be.undefined;
-            expect(props.del).to.be.undefined;
-            expect(props.put).to.be.undefined;
-            expect(props.foo).to.be.instanceOf(Function);
-            expect(props.bar).to.be.false;
-        });
-
-        it('global defaults should be overwritten by factory defaults', function() {
-            const Test = jax(originalDefaults)(_Test);
-            TestUtils.renderIntoDocument(<Test />);
-
-            expect(props.get).to.be.instanceOf(Function);
-            expect(props.post).to.be.instanceOf(Function);
-            expect(props.del).to.be.instanceOf(Function);
-            expect(props.put).to.be.instanceOf(Function);
-            expect(props.abort).to.be.instanceOf(Function);
-            expect(props.pending).to.be.false;
-        });
-
-        afterEach(function() {
-            _.extend(jaxDefaults, originalDefaults);
-        });
-    });
-
 
     describe('tracks requests', function() {
 

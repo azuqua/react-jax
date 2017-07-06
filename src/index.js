@@ -3,22 +3,12 @@ import hoist from 'hoist-non-react-statics';
 import getDisplayName from 'react-display-name';
 import transform from 'lodash/transform';
 
-// overrideable defaults for the package
-export const jaxDefaults = {
-    client: null,
-    methods: ['get', 'post', 'del', 'put'],
-    pendingKey: 'pending',
-    abortKey: 'abort',
-    endEvents: ['end', 'abort', 'error'],
-};
-
-// the decorator
-export const jax = ({
-    client = jaxDefaults.client,
-    methods = jaxDefaults.methods,
-    abortKey = jaxDefaults.abortKey,
-    pendingKey = jaxDefaults.pendingKey,
-    endEvents = jaxDefaults.endEvents,
+export default ({
+    client,
+    endEvents = ['end', 'abort', 'error'],
+    methods = ['get', 'post', 'del', 'put'],
+    abortKey = 'abort',
+    pendingKey = 'pending',
 } = {}) => (OriginalComponent) => {
     if (!OriginalComponent) throw new Error('No component to wrap.');
 
@@ -97,9 +87,10 @@ export const jax = ({
             const props = {
                 ...this.props,
                 ...this.methods,
-                [abortKey]: this.abort,
-                [pendingKey]: this.state.pending,
             };
+
+            if (abortKey) props[abortKey] = this.abort;
+            if (pendingKey) props[pendingKey] = this.state.pending;
 
             return createElement(OriginalComponent, props);
         }

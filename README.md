@@ -11,15 +11,11 @@ A tiny higher order component to manage AJAX requests in React components.
 
 ```js
 import React from 'react';
-import { jax, jaxDefaults } from 'react-jax';
+import jax from 'react-jax';
 import superagent from 'superagent';
 
-/* set global defaults */
-jaxDefaults.client = superagent; // IMPORTANT
-jaxDefaults.pendingKey = 'loading';
-
-/* overwrite global options for a specific component */
-@jax({ // same as defaults
+@jax({
+    client: superagent, // only required option
     methods: ['get', 'post', 'del', 'put'],
     pendingKey: 'pending',
     abortKey: 'abort'
@@ -61,8 +57,7 @@ export default jax(options)(Test);
 
 #### Options
 
-These options can be passed to the `jax()` function. Or be set on the
-exported `jaxDefaults` object.
+These options are passed to the `jax()` function.
 
 ##### `client` __required__
 
@@ -75,7 +70,7 @@ Property name to expose the pending status as.
 ##### `abortKey` defaults to `abort`
 Property name to expose the abort function as.
 
-#### `endEvents` defaults to `['end', 'abort']`
+#### `endEvents` defaults to `['end', 'abort', 'error']`
 Events emitted by the clients request object than indicate it should be
 cleaned up.
 
