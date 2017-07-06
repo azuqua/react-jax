@@ -51,7 +51,7 @@ describe('jax Component', function() {
     class _Test extends React.Component {
         render() {
             props = this.props;
-            return <div {...this.props} />;
+            return <div />;
         }
     }
 
