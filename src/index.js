@@ -3,14 +3,24 @@ import hoist from 'hoist-non-react-statics';
 import getDisplayName from 'react-display-name';
 import transform from 'lodash/transform';
 
-export default ({
-    client,
-    endEvents = ['end', 'abort', 'error'],
-    methods = ['get', 'post', 'del', 'put'],
-    abortKey = 'abort',
-    pendingKey = 'pending',
-} = {}) => (OriginalComponent) => {
+function isAgent(obj) {
+    return obj
+        && typeof obj.get === 'function'
+        && typeof obj.post === 'function'
+        && typeof obj.del === 'function'
+        && typeof obj.put === 'function';
+}
+
+export default (opts = {}) => (OriginalComponent) => {
     if (!OriginalComponent) throw new Error('No component to wrap.');
+
+    const {
+      client,
+      endEvents = ['end', 'abort', 'error'],
+      methods = ['get', 'post', 'del', 'put'],
+      abortKey = 'abort',
+      pendingKey = 'pending',
+    } = isAgent(opts) ? { client: opts } : opts;
 
     // return a higher-order-component
     class WrappedComponent extends Component {

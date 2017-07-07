@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import jax from '../src';
 import superagent from 'superagent';
 import secretagent from './fixtures/secretagent';
@@ -26,7 +26,7 @@ describe('jax component factory', function() {
 
     let factory = null;
     before(function() {
-        factory = jax();
+        factory = jax(superagent);
     });
 
     it('should be a function', function() {
@@ -70,7 +70,7 @@ describe('jax Component', function() {
     });
 
     it('should use the default options if none are provided', function() {
-        const Test = jax()(_Test);
+        const Test = jax(superagent)(_Test);
         TestUtils.renderIntoDocument(<Test />);
 
         expect(props.get).to.be.instanceOf(Function);
@@ -82,7 +82,7 @@ describe('jax Component', function() {
     });
 
     it('should honor the "methods" property', function() {
-        const Test = jax({ methods: ['get'] })(_Test);
+        const Test = jax({ client: superagent, methods: ['get'] })(_Test);
         TestUtils.renderIntoDocument(<Test />);
 
         expect(props.get).to.be.instanceOf(Function);
@@ -92,7 +92,7 @@ describe('jax Component', function() {
     });
 
     it('should honor the "pendingKey" option', function() {
-        const Test = jax({ pendingKey: 'foo' })(_Test);
+        const Test = jax({ client: superagent, pendingKey: 'foo' })(_Test);
         TestUtils.renderIntoDocument(<Test />);
 
         expect(props.pending).to.be.undefined;
@@ -100,7 +100,7 @@ describe('jax Component', function() {
     });
 
     it('should honor the "abortKey" property', function() {
-        const Test = jax({ abortKey: 'foo' })(_Test);
+        const Test = jax({ client: superagent, abortKey: 'foo' })(_Test);
         TestUtils.renderIntoDocument(<Test />);
 
         expect(props.abort).to.be.undefined;
@@ -108,7 +108,7 @@ describe('jax Component', function() {
     });
 
     it('should honor the "client" property', function() {
-        const Test = jax({ client: secretagent })(_Test);
+        const Test = jax(secretagent)(_Test);
         TestUtils.renderIntoDocument(<Test />);
 
         expect(props.get).to.be.instanceOf(Function);
@@ -118,7 +118,7 @@ describe('jax Component', function() {
 
     describe('tracks requests', function() {
 
-        const factory = jax({ client: secretagent });;
+        const factory = jax(secretagent);
 
         it('should start tracking requests when they are made', function() {
             const Test = factory(_Test);

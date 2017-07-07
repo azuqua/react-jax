@@ -14,12 +14,7 @@ import React from 'react';
 import jax from 'react-jax';
 import superagent from 'superagent';
 
-@jax({
-    client: superagent, // only required option
-    methods: ['get', 'post', 'del', 'put'],
-    pendingKey: 'pending',
-    abortKey: 'abort'
-})
+@jax(superagent)
 export default class MyComponent extends React.Component {
 
     sendRequest = () => {
@@ -57,7 +52,10 @@ export default jax(options)(Test);
 
 #### Options
 
-These options are passed to the `jax()` function.
+You can choose to pass a superagent client or an object
+for additional options.
+
+These options can be passed to the `jax()` decorator.
 
 ##### `client` __required__
 
