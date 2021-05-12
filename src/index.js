@@ -1,7 +1,8 @@
-import { createElement, Component } from 'react';
+import { createElement } from 'react';
 import hoist from 'hoist-non-react-statics';
 import getDisplayName from 'react-display-name';
 import transform from 'lodash/transform';
+import { SafetyFirst } from 'react-mermanatee';
 
 function isAgent(obj) {
     return obj
@@ -23,9 +24,13 @@ export default (opts = {}) => (OriginalComponent) => {
     } = isAgent(opts) ? { client: opts } : opts;
 
     // return a higher-order-component
-    class WrappedComponent extends Component {
+    class WrappedComponent extends SafetyFirst {
 
         static displayName = `Jax(${getDisplayName(OriginalComponent)})`;
+
+        constructor(props, ...args) {
+            super(props, ...args);
+        }
 
         /**
          * Requests to be passed to the OriginalComponent as props
@@ -54,6 +59,7 @@ export default (opts = {}) => (OriginalComponent) => {
          * Makes sure to abort all request on unmount
          */
         componentWillUnmount() {
+            super.componentWillUnmount();
             this.abort();
         }
 
